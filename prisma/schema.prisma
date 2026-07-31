@@ -1,0 +1,687 @@
+// Travel Info Centre (TIC) — full domain schema.
+// NOTE: dev datasource is SQLite (no cloud MySQL credentials yet). The schema
+// intentionally avoids MySQL-only native-type attributes and Prisma `enum`
+// (unsupported on SQLite) so switching `provider` below to "mysql" plus the
+// DATABASE_URL is the only change needed to move to production. String
+// "enum" fields are validated at the Zod layer in src/lib/validation/.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Identity
+// ─────────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String?   @unique
+  emailVerified DateTime?
+  phone         String?   @unique
+  passwordHash  String?
+  image         String?
+  role          String    @default("customer") // admin | manager | driver | customer
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts    Account[]
+  sessions    Session[]
+  customer    Customer?
+  driver      Driver?
+  auditLogs   AuditLog[]
+  leadNotes   LeadNote[]
+  reviews     Review[]
+
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model OtpToken {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Fleet
+// ─────────────────────────────────────────────────────────────────────────
+
+model VehicleCategory {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+  icon        String?
+  sortOrder   Int     @default(0)
+
+  vehicles Vehicle[]
+}
+
+model Vehicle {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  name            String
+  categoryId      String
+  capacity        Int
+  luggageCapacity Int
+  acType          String   @default("AC") // AC | Non-AC
+  transmission    String   @default("Manual")
+  basePrice       Decimal
+  pricePerKm      Decimal
+  driverAllowance Decimal  @default(0)
+  nightCharge     Decimal  @default(0)
+  fuelType        String   @default("Diesel")
+  description     String
+  isActive        Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  category      VehicleCategory  @relation(fields: [categoryId], references: [id])
+  images        VehicleImage[]
+  features      VehicleFeature[]
+  pricingRules  PricingRule[]
+  availability  Availability[]
+  maintenance   MaintenanceLog[]
+  bookings      Booking[]
+  seoMeta       SeoMeta?
+
+  @@index([categoryId])
+  @@index([isActive, isFeatured])
+}
+
+model VehicleImage {
+  id        String  @id @default(cuid())
+  vehicleId String
+  url       String
+  alt       String
+  sortOrder Int     @default(0)
+  isPrimary Boolean @default(false)
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+}
+
+model VehicleFeature {
+  id        String @id @default(cuid())
+  vehicleId String
+  label     String
+  icon      String?
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+}
+
+model PricingRule {
+  id          String    @id @default(cuid())
+  vehicleId   String
+  label       String
+  startDate   DateTime
+  endDate     DateTime
+  multiplier  Decimal   @default(1.0)
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId, startDate, endDate])
+}
+
+model Availability {
+  id        String   @id @default(cuid())
+  vehicleId String
+  date      DateTime
+  isBlocked Boolean  @default(false)
+  reason    String?
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([vehicleId, date])
+}
+
+model MaintenanceLog {
+  id          String    @id @default(cuid())
+  vehicleId   String
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  cost        Decimal?
+  createdAt   DateTime  @default(now())
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// People
+// ─────────────────────────────────────────────────────────────────────────
+
+model Customer {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  address   String?
+  city      String?
+  loyaltyPoints Int  @default(0)
+  createdAt DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookings Booking[]
+  reviews  Review[]
+  wishlist WishlistItem[]
+}
+
+model Driver {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  licenseNo    String
+  experience   Int      @default(0)
+  rating       Decimal  @default(0)
+  isAvailable  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents DriverDocument[]
+  bookings  Booking[]
+}
+
+model DriverDocument {
+  id       String @id @default(cuid())
+  driverId String
+  type     String // license | id_proof | police_verification
+  url      String
+  verified Boolean @default(false)
+
+  driver Driver @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@index([driverId])
+}
+
+model Guide {
+  id          String  @id @default(cuid())
+  name        String
+  languages   String  // comma-separated: Hindi,English,French...
+  bio         String
+  photo       String?
+  govApproved Boolean @default(true)
+  isActive    Boolean @default(true)
+  phone       String
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Products
+// ─────────────────────────────────────────────────────────────────────────
+
+model Package {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  summary       String
+  description   String
+  durationDays  Int
+  durationNights Int
+  price         Decimal
+  discountPrice Decimal?
+  maxGroupSize  Int      @default(20)
+  isActive      Boolean  @default(true)
+  isFeatured    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  images       PackageImage[]
+  itinerary    ItineraryDay[]
+  inclusions   Inclusion[]
+  exclusions   Exclusion[]
+  bookings     Booking[]
+  reviews      Review[]
+  seoMeta      SeoMeta?
+
+  @@index([isActive, isFeatured])
+}
+
+model PackageImage {
+  id        String  @id @default(cuid())
+  packageId String
+  url       String
+  alt       String
+  sortOrder Int     @default(0)
+  isPrimary Boolean @default(false)
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([packageId])
+}
+
+model ItineraryDay {
+  id        String @id @default(cuid())
+  packageId String
+  dayNumber Int
+  title     String
+  details   String
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([packageId])
+}
+
+model Inclusion {
+  id        String @id @default(cuid())
+  packageId String
+  label     String
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+}
+
+model Exclusion {
+  id        String @id @default(cuid())
+  packageId String
+  label     String
+
+  package Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+}
+
+model Destination {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String
+  summary     String
+  history     String
+  bestSeason  String?
+  weatherInfo String?
+  mapEmbedUrl String?
+  isActive    Boolean @default(true)
+
+  images  GalleryAlbum[]
+  seoMeta SeoMeta?
+}
+
+model Hotel {
+  id        String  @id @default(cuid())
+  name      String
+  category  String // luxury | budget | guesthouse | pilgrim | corporate | partner
+  address   String
+  city      String
+  starRating Int    @default(3)
+  amenities String? // comma-separated
+  isActive  Boolean @default(true)
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Transactions
+// ─────────────────────────────────────────────────────────────────────────
+
+model Booking {
+  id              String    @id @default(cuid())
+  bookingNumber   String    @unique // TIC-YYMMDD-NNNN
+  customerId      String
+  vehicleId       String?
+  packageId       String?
+  driverId        String?
+  journeyType     String    // one_way | round_trip | local | outstation | package
+  pickupLocation  String
+  dropLocation    String?
+  pickupDate      DateTime
+  pickupTime      String
+  returnDate      DateTime?
+  passengers      Int       @default(1)
+  customerName    String
+  customerPhone   String
+  customerEmail   String?
+  specialRequest  String?
+  promoCode       String?
+  baseFare        Decimal
+  discountAmount  Decimal   @default(0)
+  taxAmount       Decimal   @default(0)
+  totalAmount     Decimal
+  status          String    @default("pending") // pending|confirmed|assigned|completed|cancelled|refunded
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  customer      Customer              @relation(fields: [customerId], references: [id])
+  vehicle       Vehicle?              @relation(fields: [vehicleId], references: [id])
+  package       Package?              @relation(fields: [packageId], references: [id])
+  driver        Driver?               @relation(fields: [driverId], references: [id])
+  statusHistory BookingStatusHistory[]
+  payments      Payment[]
+  invoice       Invoice?
+
+  @@index([customerId])
+  @@index([status])
+  @@index([bookingNumber])
+}
+
+model BookingStatusHistory {
+  id        String   @id @default(cuid())
+  bookingId String
+  status    String
+  note      String?
+  changedAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  bookingId     String
+  amount        Decimal
+  method        String   // razorpay|phonepe|cashfree|payu|upi|card|netbanking|wallet|cash
+  status        String   @default("pending") // pending|success|failed|refunded
+  transactionId String?
+  createdAt     DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  refund  Refund?
+
+  @@index([bookingId])
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  bookingId     String   @unique
+  invoiceNumber String   @unique
+  gstAmount     Decimal  @default(0)
+  totalAmount   Decimal
+  pdfUrl        String?
+  createdAt     DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model Coupon {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  description   String?
+  discountType  String    // percentage | flat
+  discountValue Decimal
+  minAmount     Decimal   @default(0)
+  maxUses       Int?
+  usedCount     Int       @default(0)
+  validFrom     DateTime
+  validTo       DateTime
+  isActive      Boolean   @default(true)
+}
+
+model Refund {
+  id        String   @id @default(cuid())
+  paymentId String   @unique
+  amount    Decimal
+  reason    String?
+  status    String   @default("pending") // pending|processed|rejected
+  createdAt DateTime @default(now())
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Content
+// ─────────────────────────────────────────────────────────────────────────
+
+model Blog {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  title         String
+  excerpt       String
+  content       String
+  coverImage    String?
+  categoryId    String?
+  authorName    String    @default("TIC Team")
+  isPublished   Boolean   @default(false)
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  category BlogCategory? @relation(fields: [categoryId], references: [id])
+  tags     BlogTag[]
+  seoMeta  SeoMeta?
+
+  @@index([isPublished])
+}
+
+model BlogCategory {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  blogs Blog[]
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  blogs BlogTag[]
+}
+
+model BlogTag {
+  blogId String
+  tagId  String
+
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([blogId, tagId])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  customerId  String?
+  userId      String?
+  packageId   String?
+  rating      Int
+  comment     String
+  photoUrl    String?
+  videoUrl    String?
+  isApproved  Boolean  @default(false)
+  isSpam      Boolean  @default(false)
+  source      String   @default("website") // website|google
+  createdAt   DateTime @default(now())
+
+  customer Customer? @relation(fields: [customerId], references: [id])
+  user     User?     @relation(fields: [userId], references: [id])
+  package  Package?  @relation(fields: [packageId], references: [id])
+
+  @@index([isApproved])
+}
+
+model Testimonial {
+  id         String  @id @default(cuid())
+  name       String
+  location   String?
+  message    String
+  photoUrl   String?
+  rating     Int     @default(5)
+  isFeatured Boolean @default(false)
+  sortOrder  Int     @default(0)
+}
+
+model GalleryAlbum {
+  id            String   @id @default(cuid())
+  title         String
+  destinationId String?
+  coverImage    String
+  createdAt     DateTime @default(now())
+
+  destination Destination? @relation(fields: [destinationId], references: [id])
+  media       Media[]
+}
+
+model Media {
+  id      String  @id @default(cuid())
+  albumId String?
+  url     String
+  type    String  @default("image") // image|video|360|drone
+  alt     String?
+
+  album GalleryAlbum? @relation(fields: [albumId], references: [id], onDelete: Cascade)
+}
+
+model Faq {
+  id        String @id @default(cuid())
+  category  String @default("general")
+  question  String
+  answer    String
+  sortOrder Int    @default(0)
+}
+
+model Offer {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String?
+  validFrom   DateTime
+  validTo     DateTime
+  isActive    Boolean   @default(true)
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Ops
+// ─────────────────────────────────────────────────────────────────────────
+
+model Lead {
+  id          String   @id @default(cuid())
+  name        String
+  phone       String
+  email       String?
+  source      String   @default("website") // website|call|referral|whatsapp
+  status      String   @default("new") // new|contacted|qualified|converted|lost
+  interest    String?
+  createdAt   DateTime @default(now())
+
+  notes LeadNote[]
+
+  @@index([status])
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  userId    String?
+  note      String
+  followUpAt DateTime?
+  createdAt DateTime @default(now())
+
+  lead Lead  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([leadId])
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("open") // open|in_progress|resolved|closed
+  createdAt DateTime @default(now())
+}
+
+model ContactEnquiry {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  title     String
+  body      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  customerId String
+  vehicleId  String?
+  packageId  String?
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model SeoMeta {
+  id              String  @id @default(cuid())
+  path            String  @unique
+  title           String
+  description     String
+  ogImage         String?
+  vehicleId       String? @unique
+  packageId       String? @unique
+  destinationId   String? @unique
+  blogId          String? @unique
+
+  vehicle     Vehicle?     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  package     Package?     @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  destination Destination? @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  blog        Blog?        @relation(fields: [blogId], references: [id], onDelete: Cascade)
+}
