@@ -1,16 +1,16 @@
 // Travel Info Centre (TIC) — full domain schema.
-// NOTE: dev datasource is SQLite (no cloud MySQL credentials yet). The schema
-// intentionally avoids MySQL-only native-type attributes and Prisma `enum`
-// (unsupported on SQLite) so switching `provider` below to "mysql" plus the
-// DATABASE_URL is the only change needed to move to production. String
-// "enum" fields are validated at the Zod layer in src/lib/validation/.
+// Production datasource: Render PostgreSQL. The schema intentionally avoids
+// MySQL/Postgres-only native-type attributes and Prisma `enum` (the project
+// started on SQLite, which supports neither) so it stays portable across
+// providers. String "enum" fields are validated at the Zod layer in
+// src/lib/validation/.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
