@@ -1,49 +1,26 @@
 import "server-only";
 import { format } from "date-fns";
-import { db } from "@/lib/db";
+import { mutateCollection, newId, readCollection } from "@/lib/jsondb";
 import { calculateFare, resolveSeasonalMultiplier } from "@/lib/pricing";
 import { BOOKING_STATUS_TRANSITIONS, type BookingStatus } from "@/lib/constants";
 import type { BookingCreateInput } from "@/lib/validation/booking";
-import type { Prisma } from "@prisma/client";
+import type { Booking, Coupon, Package, Vehicle } from "@/lib/entities";
 
 export class BookingError extends Error {}
 
-async function generateBookingNumber(tx: Prisma.TransactionClient): Promise<string> {
+function generateBookingNumber(rows: Booking[]): string {
   const now = new Date();
   const datePart = format(now, "yyMMdd");
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const endOfDay = new Date(startOfDay);
   endOfDay.setDate(endOfDay.getDate() + 1);
 
-  const count = await tx.booking.count({
-    where: { createdAt: { gte: startOfDay, lt: endOfDay } },
-  });
+  const count = rows.filter((b) => {
+    const created = new Date(b.createdAt);
+    return created >= startOfDay && created < endOfDay;
+  }).length;
   const seq = String(count + 1).padStart(4, "0");
   return `TIC-${datePart}-${seq}`;
-}
-
-async function resolveCustomerId(
-  tx: Prisma.TransactionClient,
-  input: { phone: string; name: string; email?: string },
-) {
-  const user = await tx.user.upsert({
-    where: { phone: input.phone },
-    update: {},
-    create: {
-      phone: input.phone,
-      name: input.name,
-      email: input.email || undefined,
-      role: "customer",
-    },
-  });
-
-  const customer = await tx.customer.upsert({
-    where: { userId: user.id },
-    update: {},
-    create: { userId: user.id },
-  });
-
-  return customer.id;
 }
 
 export async function previewFare(input: {
@@ -55,9 +32,10 @@ export async function previewFare(input: {
   promoCode?: string;
 }) {
   if (input.packageId) {
-    const pkg = await db.package.findUnique({ where: { id: input.packageId } });
+    const packages = await readCollection<Package>("packages");
+    const pkg = packages.find((p) => p.id === input.packageId);
     if (!pkg) throw new BookingError("Package not found");
-    const price = Number(pkg.discountPrice ?? pkg.price);
+    const price = pkg.discountPrice ?? pkg.price;
     return calculateFare({
       basePrice: price,
       pricePerKm: 0,
@@ -70,31 +48,28 @@ export async function previewFare(input: {
 
   if (!input.vehicleId) throw new BookingError("Select a vehicle or package");
 
-  const vehicle = await db.vehicle.findUnique({
-    where: { id: input.vehicleId },
-    include: { pricingRules: true },
-  });
+  const vehicles = await readCollection<Vehicle>("vehicles");
+  const vehicle = vehicles.find((v) => v.id === input.vehicleId);
   if (!vehicle) throw new BookingError("Vehicle not found");
 
   const [hour] = input.pickupTime.split(":").map(Number);
   const isNightCharge = hour >= 22 || hour < 6;
   const seasonalMultiplier = resolveSeasonalMultiplier(
     vehicle.pricingRules.map((r) => ({
-      startDate: r.startDate,
-      endDate: r.endDate,
-      multiplier: Number(r.multiplier),
+      startDate: new Date(r.startDate),
+      endDate: new Date(r.endDate),
+      multiplier: r.multiplier,
     })),
     input.pickupDate,
   );
 
-  const subtotalEstimate =
-    Number(vehicle.basePrice) + Number(vehicle.pricePerKm) * input.estimatedKm;
+  const subtotalEstimate = vehicle.basePrice + vehicle.pricePerKm * input.estimatedKm;
 
   return calculateFare({
-    basePrice: Number(vehicle.basePrice),
-    pricePerKm: Number(vehicle.pricePerKm),
-    driverAllowance: Number(vehicle.driverAllowance),
-    nightCharge: Number(vehicle.nightCharge),
+    basePrice: vehicle.basePrice,
+    pricePerKm: vehicle.pricePerKm,
+    driverAllowance: vehicle.driverAllowance,
+    nightCharge: vehicle.nightCharge,
     chargeableKm: input.estimatedKm,
     isNightCharge,
     seasonalMultiplier,
@@ -104,16 +79,17 @@ export async function previewFare(input: {
 
 async function resolveCoupon(code: string | undefined, amount: number) {
   if (!code) return null;
-  const coupon = await db.coupon.findUnique({ where: { code } });
+  const coupons = await readCollection<Coupon>("coupons");
+  const coupon = coupons.find((c) => c.code === code);
   if (!coupon || !coupon.isActive) return null;
   const now = new Date();
-  if (now < coupon.validFrom || now > coupon.validTo) return null;
+  if (now < new Date(coupon.validFrom) || now > new Date(coupon.validTo)) return null;
   if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) return null;
-  if (amount < Number(coupon.minAmount)) return null;
+  if (amount < coupon.minAmount) return null;
   return {
-    discountType: coupon.discountType as "percentage" | "flat",
-    discountValue: Number(coupon.discountValue),
-    minAmount: Number(coupon.minAmount),
+    discountType: coupon.discountType,
+    discountValue: coupon.discountValue,
+    minAmount: coupon.minAmount,
   };
 }
 
@@ -127,72 +103,94 @@ export async function createBooking(input: BookingCreateInput) {
     promoCode: input.promoCode,
   });
 
-  return db.$transaction(async (tx) => {
-    const customerId = await resolveCustomerId(tx, {
-      phone: input.customerPhone,
-      name: input.customerName,
-      email: input.customerEmail,
-    });
+  let createdBooking!: Booking;
 
-    const bookingNumber = await generateBookingNumber(tx);
-
-    const booking = await tx.booking.create({
-      data: {
-        bookingNumber,
-        customerId,
-        vehicleId: input.vehicleId,
-        packageId: input.packageId,
-        journeyType: input.journeyType,
-        pickupLocation: input.pickupLocation,
-        dropLocation: input.dropLocation || null,
-        pickupDate: input.pickupDate,
-        pickupTime: input.pickupTime,
-        returnDate: input.returnDate,
-        passengers: input.passengers,
-        customerName: input.customerName,
-        customerPhone: input.customerPhone,
-        customerEmail: input.customerEmail || null,
-        specialRequest: input.specialRequest || null,
-        promoCode: input.promoCode || null,
-        baseFare: fare.subtotal,
-        discountAmount: fare.discountAmount,
-        taxAmount: fare.taxAmount,
-        totalAmount: fare.totalAmount,
-        status: "pending",
-        statusHistory: { create: { status: "pending", note: "Booking created" } },
-        payments: { create: { amount: fare.totalAmount, method: "cash", status: "pending" } },
-      },
-      include: { statusHistory: true, payments: true },
-    });
-
-    if (input.promoCode) {
-      await tx.coupon
-        .update({ where: { code: input.promoCode }, data: { usedCount: { increment: 1 } } })
-        .catch(() => undefined);
-    }
-
-    return { booking, fare };
+  await mutateCollection<Booking>("bookings", (rows) => {
+    const now = new Date().toISOString();
+    const booking: Booking = {
+      id: newId(),
+      bookingNumber: generateBookingNumber(rows),
+      vehicleId: input.vehicleId ?? null,
+      packageId: input.packageId ?? null,
+      driverId: null,
+      journeyType: input.journeyType,
+      pickupLocation: input.pickupLocation,
+      dropLocation: input.dropLocation || null,
+      pickupDate: input.pickupDate.toISOString(),
+      pickupTime: input.pickupTime,
+      returnDate: input.returnDate ? input.returnDate.toISOString() : null,
+      passengers: input.passengers,
+      customerName: input.customerName,
+      customerPhone: input.customerPhone,
+      customerEmail: input.customerEmail || null,
+      specialRequest: input.specialRequest || null,
+      promoCode: input.promoCode || null,
+      baseFare: fare.subtotal,
+      discountAmount: fare.discountAmount,
+      taxAmount: fare.taxAmount,
+      totalAmount: fare.totalAmount,
+      status: "pending",
+      createdAt: now,
+      updatedAt: now,
+      statusHistory: [{ id: newId(), status: "pending", note: "Booking created", changedAt: now }],
+      payments: [
+        { id: newId(), amount: fare.totalAmount, method: "cash", status: "pending", transactionId: null, createdAt: now },
+      ],
+    };
+    createdBooking = booking;
+    return [...rows, booking];
   });
+
+  if (input.promoCode) {
+    await mutateCollection<Coupon>("coupons", (rows) =>
+      rows.map((c) => (c.code === input.promoCode ? { ...c, usedCount: c.usedCount + 1 } : c)),
+    );
+  }
+
+  return { booking: createdBooking, fare };
+}
+
+async function joinVehicleAndPackage(booking: Booking) {
+  const [vehicles, packages] = await Promise.all([
+    readCollection<Vehicle>("vehicles"),
+    readCollection<Package>("packages"),
+  ]);
+  return {
+    vehicle: booking.vehicleId ? (vehicles.find((v) => v.id === booking.vehicleId) ?? null) : null,
+    package: booking.packageId ? (packages.find((p) => p.id === booking.packageId) ?? null) : null,
+  };
 }
 
 export async function getBookingByNumber(bookingNumber: string) {
-  return db.booking.findUnique({
-    where: { bookingNumber },
-    include: {
-      vehicle: { include: { images: { take: 1, orderBy: { sortOrder: "asc" } } } },
-      package: { include: { images: { take: 1, orderBy: { sortOrder: "asc" } } } },
-      statusHistory: { orderBy: { changedAt: "asc" } },
-      payments: true,
-    },
-  });
+  const bookings = await readCollection<Booking>("bookings");
+  const booking = bookings.find((b) => b.bookingNumber === bookingNumber);
+  if (!booking) return null;
+
+  const joined = await joinVehicleAndPackage(booking);
+  return {
+    ...booking,
+    ...joined,
+    statusHistory: [...booking.statusHistory].sort((a, b) => a.changedAt.localeCompare(b.changedAt)),
+  };
 }
 
-export async function listBookings(options?: { status?: BookingStatus; customerId?: string }) {
-  return db.booking.findMany({
-    where: { status: options?.status, customerId: options?.customerId },
-    include: { vehicle: true, package: true, customer: { include: { user: true } } },
-    orderBy: { createdAt: "desc" },
-  });
+export async function listBookings(options?: { status?: BookingStatus }) {
+  const bookings = await readCollection<Booking>("bookings");
+  const [vehicles, packages] = await Promise.all([
+    readCollection<Vehicle>("vehicles"),
+    readCollection<Package>("packages"),
+  ]);
+  const vehicleById = new Map(vehicles.map((v) => [v.id, v]));
+  const packageById = new Map(packages.map((p) => [p.id, p]));
+
+  const filtered = options?.status ? bookings.filter((b) => b.status === options.status) : bookings;
+  const sorted = [...filtered].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+  return sorted.map((b) => ({
+    ...b,
+    vehicle: b.vehicleId ? (vehicleById.get(b.vehicleId) ?? null) : null,
+    package: b.packageId ? (packageById.get(b.packageId) ?? null) : null,
+  }));
 }
 
 export async function updateBookingStatus(
@@ -200,26 +198,36 @@ export async function updateBookingStatus(
   nextStatus: BookingStatus,
   options?: { note?: string; driverId?: string },
 ) {
-  const booking = await db.booking.findUnique({ where: { id: bookingId } });
-  if (!booking) throw new BookingError("Booking not found");
+  let updated!: Booking;
 
-  const currentStatus = booking.status as BookingStatus;
-  const allowed = BOOKING_STATUS_TRANSITIONS[currentStatus];
-  if (!allowed.includes(nextStatus)) {
-    throw new BookingError(`Cannot move booking from ${currentStatus} to ${nextStatus}`);
-  }
+  await mutateCollection<Booking>("bookings", (rows) => {
+    const idx = rows.findIndex((b) => b.id === bookingId);
+    if (idx === -1) throw new BookingError("Booking not found");
 
-  return db.$transaction(async (tx) => {
-    const updated = await tx.booking.update({
-      where: { id: bookingId },
-      data: {
-        status: nextStatus,
-        driverId: nextStatus === "assigned" ? options?.driverId : undefined,
-      },
-    });
-    await tx.bookingStatusHistory.create({
-      data: { bookingId, status: nextStatus, note: options?.note },
-    });
-    return updated;
+    const booking = rows[idx];
+    const currentStatus = booking.status as BookingStatus;
+    const allowed = BOOKING_STATUS_TRANSITIONS[currentStatus];
+    if (!allowed.includes(nextStatus)) {
+      throw new BookingError(`Cannot move booking from ${currentStatus} to ${nextStatus}`);
+    }
+
+    const now = new Date().toISOString();
+    const next: Booking = {
+      ...booking,
+      status: nextStatus,
+      driverId: nextStatus === "assigned" ? (options?.driverId ?? booking.driverId) : booking.driverId,
+      updatedAt: now,
+      statusHistory: [
+        ...booking.statusHistory,
+        { id: newId(), status: nextStatus, note: options?.note ?? null, changedAt: now },
+      ],
+    };
+    updated = next;
+
+    const copy = [...rows];
+    copy[idx] = next;
+    return copy;
   });
+
+  return updated;
 }

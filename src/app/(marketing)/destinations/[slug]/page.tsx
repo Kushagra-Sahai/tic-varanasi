@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { db } from "@/lib/db";
+import { getDestinationBySlug } from "@/server/services/destinationService";
 
 export async function generateMetadata({
   params,
@@ -11,7 +11,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const dest = await db.destination.findUnique({ where: { slug } });
+  const dest = await getDestinationBySlug(slug);
   if (!dest) return {};
   return { title: dest.name, description: dest.summary, alternates: { canonical: `/destinations/${dest.slug}` } };
 }
@@ -22,7 +22,7 @@ export default async function DestinationDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const dest = await db.destination.findUnique({ where: { slug, isActive: true } });
+  const dest = await getDestinationBySlug(slug);
   if (!dest) notFound();
 
   return (

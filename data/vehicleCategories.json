@@ -1,0 +1,90 @@
+[
+  {
+    "id": "2d2adde2-174b-42ad-b782-1ce6beae5ac9",
+    "name": "Sedan",
+    "slug": "sedan",
+    "description": "Comfortable city & outstation sedans",
+    "sortOrder": 1,
+    "icon": null
+  },
+  {
+    "id": "3b27671e-3777-48c5-af2d-56943ab193de",
+    "name": "SUV",
+    "slug": "suv",
+    "description": "Spacious SUVs for families and hills",
+    "sortOrder": 2,
+    "icon": null
+  },
+  {
+    "id": "ee66413a-854c-4bcd-8459-797b5df4a704",
+    "name": "Ertiga",
+    "slug": "ertiga",
+    "description": "6-seater MPV, ideal for small groups",
+    "sortOrder": 3,
+    "icon": null
+  },
+  {
+    "id": "c26f84e9-db71-4fd1-82d7-8b0cbc84b446",
+    "name": "Innova",
+    "slug": "innova",
+    "description": "Toyota Innova — 7-seater comfort",
+    "sortOrder": 4,
+    "icon": null
+  },
+  {
+    "id": "651c510b-d9ab-4796-9371-bae652d139a2",
+    "name": "Innova Crysta",
+    "slug": "innova-crysta",
+    "description": "Premium 7-seater with extra legroom",
+    "sortOrder": 5,
+    "icon": null
+  },
+  {
+    "id": "bdc17e33-41c8-43d6-a1f4-9582fb1a4799",
+    "name": "Tempo Traveller",
+    "slug": "tempo-traveller",
+    "description": "12–17 seater for groups",
+    "sortOrder": 6,
+    "icon": null
+  },
+  {
+    "id": "724cdafd-0dc2-496d-b8fd-bbf8d1229510",
+    "name": "Luxury Sedan",
+    "slug": "luxury-sedan",
+    "description": "Executive class sedans",
+    "sortOrder": 7,
+    "icon": null
+  },
+  {
+    "id": "7702910c-952f-4990-a379-58bedbeb9a81",
+    "name": "Luxury SUV",
+    "slug": "luxury-suv",
+    "description": "Top-tier SUVs for VIP travel",
+    "sortOrder": 8,
+    "icon": null
+  },
+  {
+    "id": "ca0c5ecd-ebf1-4630-9583-579e7cda7ee3",
+    "name": "Mini Bus",
+    "slug": "mini-bus",
+    "description": "25–30 seater for larger groups",
+    "sortOrder": 9,
+    "icon": null
+  },
+  {
+    "id": "5a69c7dd-60eb-419a-926c-ce95e784f203",
+    "name": "Coach Bus",
+    "slug": "coach-bus",
+    "description": "40+ seater luxury coaches",
+    "sortOrder": 10,
+    "icon": null
+  },
+  {
+    "id": "d3f484c8-2b78-478a-a254-fdfe2977cc73",
+    "name": "Electric Vehicle",
+    "slug": "electric-vehicle",
+    "description": "Eco-friendly EV fleet",
+    "sortOrder": 11,
+    "icon": null
+  }
+]

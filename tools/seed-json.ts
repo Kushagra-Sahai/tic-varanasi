@@ -1,7 +1,21 @@
-import { PrismaClient } from "@prisma/client";
+// Generates data/*.json — the committed baseline every deploy starts from
+// (see .env for why: no database, JSON files reset to this on every
+// redeploy/restart unless a persistent Disk is attached). Run with
+// `npm run db:seed`. Writes directly via `fs`, not src/lib/jsondb.ts, since
+// that module is `server-only`-guarded and can't run outside Next's build.
+
+import { randomUUID } from "node:crypto";
+import { mkdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
 import bcrypt from "bcryptjs";
 
-const db = new PrismaClient();
+const DATA_DIR = path.join(process.cwd(), "data");
+mkdirSync(DATA_DIR, { recursive: true });
+
+function write(name: string, data: unknown) {
+  writeFileSync(path.join(DATA_DIR, `${name}.json`), JSON.stringify(data, null, 2), "utf-8");
+  console.log(`  wrote data/${name}.json`);
+}
 
 // Licensed stock photography placeholders — swap via the admin media picker
 // once real fleet/property photography is available.
@@ -9,20 +23,25 @@ const img = (seed: string, w = 1200, h = 800) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`;
 
 async function main() {
-  console.log("Seeding TIC database...");
+  console.log("Seeding TIC JSON data store...");
+  const now = new Date().toISOString();
 
-  // ── Admin user ──────────────────────────────────────────────────────
+  // ── Users (admin) ───────────────────────────────────────────────────
   const adminPasswordHash = await bcrypt.hash("Admin@TIC2026", 10);
-  await db.user.upsert({
-    where: { email: "ticvns@gmail.com" },
-    update: {},
-    create: {
-      email: "ticvns@gmail.com",
+  const users = [
+    {
+      id: randomUUID(),
       name: "TIC Admin",
-      role: "admin",
+      email: "ticvns@gmail.com",
+      phone: null,
       passwordHash: adminPasswordHash,
+      role: "admin" as const,
+      isActive: true,
+      createdAt: now,
     },
-  });
+  ];
+  write("users", users);
+  write("otpTokens", []);
 
   // ── Vehicle categories ──────────────────────────────────────────────
   const categoryDefs = [
@@ -38,16 +57,13 @@ async function main() {
     { name: "Coach Bus", slug: "coach-bus", description: "40+ seater luxury coaches", sortOrder: 10 },
     { name: "Electric Vehicle", slug: "electric-vehicle", description: "Eco-friendly EV fleet", sortOrder: 11 },
   ];
-
-  const categories: Record<string, string> = {};
-  for (const c of categoryDefs) {
-    const cat = await db.vehicleCategory.upsert({
-      where: { slug: c.slug },
-      update: {},
-      create: c,
-    });
-    categories[c.slug] = cat.id;
-  }
+  const vehicleCategories = categoryDefs.map((c) => ({
+    id: randomUUID(),
+    ...c,
+    icon: null as string | null,
+  }));
+  write("vehicleCategories", vehicleCategories);
+  const categoryIdBySlug = Object.fromEntries(vehicleCategories.map((c) => [c.slug, c.id]));
 
   // ── Vehicles ─────────────────────────────────────────────────────────
   const vehicleDefs = [
@@ -189,46 +205,51 @@ async function main() {
     },
   ];
 
-  for (const v of vehicleDefs) {
-    const vehicle = await db.vehicle.upsert({
-      where: { slug: v.slug },
-      update: {},
-      create: {
-        slug: v.slug,
-        name: v.name,
-        categoryId: categories[v.category],
-        capacity: v.capacity,
-        luggageCapacity: v.luggageCapacity,
-        basePrice: v.basePrice,
-        pricePerKm: v.pricePerKm,
-        driverAllowance: v.driverAllowance,
-        nightCharge: v.nightCharge,
-        description: v.description,
-        isFeatured: v.isFeatured ?? false,
-        images: {
-          create: [0, 1, 2].map((i) => ({
-            url: img(`${v.slug}-${i}`),
-            alt: `${v.name} — TIC Varanasi`,
-            sortOrder: i,
-            isPrimary: i === 0,
-          })),
-        },
-        features: { create: v.features.map((label) => ({ label })) },
-      },
-    });
-    void vehicle;
-  }
+  const vehicles = vehicleDefs.map((v) => ({
+    id: randomUUID(),
+    slug: v.slug,
+    name: v.name,
+    categoryId: categoryIdBySlug[v.category],
+    capacity: v.capacity,
+    luggageCapacity: v.luggageCapacity,
+    acType: "AC",
+    transmission: "Manual",
+    basePrice: v.basePrice,
+    pricePerKm: v.pricePerKm,
+    driverAllowance: v.driverAllowance,
+    nightCharge: v.nightCharge,
+    fuelType: "Diesel",
+    description: v.description,
+    isActive: true,
+    isFeatured: v.isFeatured ?? false,
+    createdAt: now,
+    updatedAt: now,
+    images: [0, 1, 2].map((i) => ({
+      id: randomUUID(),
+      url: img(`${v.slug}-${i}`),
+      alt: `${v.name} — TIC Varanasi`,
+      sortOrder: i,
+      isPrimary: i === 0,
+    })),
+    features: v.features.map((label) => ({ id: randomUUID(), label, icon: null as string | null })),
+    pricingRules: [] as unknown[],
+  }));
+  write("vehicles", vehicles);
 
   // ── Destinations ─────────────────────────────────────────────────────
-  const destinationDefs = [
+  const destinations = [
     { slug: "varanasi", name: "Varanasi", summary: "The eternal city on the banks of the Ganga.", history: "One of the oldest continuously inhabited cities in the world, sacred to Hindus, Jains and Buddhists alike.", bestSeason: "October to March" },
     { slug: "sarnath", name: "Sarnath", summary: "Where Buddha delivered his first sermon.", history: "A major Buddhist pilgrimage site 10km from Varanasi, home to the Dhamek Stupa.", bestSeason: "October to March" },
     { slug: "ayodhya", name: "Ayodhya", summary: "Birthplace of Lord Rama and home to the Ram Mandir.", history: "One of the seven most sacred cities in Hinduism, on the banks of the Sarayu river.", bestSeason: "October to March" },
     { slug: "prayagraj", name: "Prayagraj", summary: "Sangam of the Ganga, Yamuna and mythical Saraswati.", history: "Site of the Kumbh Mela, one of the largest religious gatherings on Earth.", bestSeason: "October to March" },
-  ];
-  for (const d of destinationDefs) {
-    await db.destination.upsert({ where: { slug: d.slug }, update: {}, create: d });
-  }
+  ].map((d) => ({
+    id: randomUUID(),
+    ...d,
+    weatherInfo: null as string | null,
+    mapEmbedUrl: null as string | null,
+    isActive: true,
+  }));
+  write("destinations", destinations);
 
   // ── Tour packages ────────────────────────────────────────────────────
   const packageDefs = [
@@ -321,67 +342,59 @@ async function main() {
     },
   ];
 
-  for (const p of packageDefs) {
-    await db.package.upsert({
-      where: { slug: p.slug },
-      update: {},
-      create: {
-        slug: p.slug,
-        title: p.title,
-        summary: p.summary,
-        description: p.description,
-        durationDays: p.durationDays,
-        durationNights: p.durationNights,
-        price: p.price,
-        discountPrice: p.discountPrice,
-        isFeatured: p.isFeatured ?? false,
-        images: {
-          create: [0, 1, 2].map((i) => ({
-            url: img(`${p.slug}-${i}`),
-            alt: p.title,
-            sortOrder: i,
-            isPrimary: i === 0,
-          })),
-        },
-        itinerary: {
-          create: p.itinerary.map((day, i) => ({
-            dayNumber: i + 1,
-            title: day.title,
-            details: day.details,
-          })),
-        },
-        inclusions: { create: p.inclusions.map((label) => ({ label })) },
-        exclusions: { create: p.exclusions.map((label) => ({ label })) },
-      },
-    });
-  }
+  const packages = packageDefs.map((p) => ({
+    id: randomUUID(),
+    slug: p.slug,
+    title: p.title,
+    summary: p.summary,
+    description: p.description,
+    durationDays: p.durationDays,
+    durationNights: p.durationNights,
+    price: p.price,
+    discountPrice: p.discountPrice ?? null,
+    maxGroupSize: 20,
+    isActive: true,
+    isFeatured: p.isFeatured ?? false,
+    createdAt: now,
+    updatedAt: now,
+    images: [0, 1, 2].map((i) => ({
+      id: randomUUID(),
+      url: img(`${p.slug}-${i}`),
+      alt: p.title,
+      sortOrder: i,
+      isPrimary: i === 0,
+    })),
+    itinerary: p.itinerary.map((day, i) => ({
+      id: randomUUID(),
+      dayNumber: i + 1,
+      title: day.title,
+      details: day.details,
+    })),
+    inclusions: p.inclusions.map((label) => ({ id: randomUUID(), label })),
+    exclusions: p.exclusions.map((label) => ({ id: randomUUID(), label })),
+  }));
+  write("packages", packages);
 
   // ── Testimonials ─────────────────────────────────────────────────────
-  const testimonialDefs = [
+  const testimonials = [
     { name: "Rajesh & Family", location: "Delhi", message: "TIC made our Kashi Vishwanath darshan effortless. The driver was courteous and the car was spotless. Highly recommend for family pilgrimage trips.", rating: 5, isFeatured: true },
     { name: "Priya Sharma", location: "Mumbai", message: "Booked the Ayodhya package for my parents — TIC handled everything from pickup to hotel to darshan assistance. Excellent service.", rating: 5, isFeatured: true },
     { name: "James Carter", location: "United Kingdom", message: "As a foreign tourist, I felt completely safe and well guided throughout Varanasi. The Ganga Aarti boat ride was unforgettable.", rating: 5, isFeatured: true },
     { name: "Anita Verma", location: "Lucknow", message: "Corporate airport transfer was punctual and professional every single time. Our go-to travel partner in Varanasi now.", rating: 4, isFeatured: false },
-  ];
-  for (const t of testimonialDefs) {
-    const existing = await db.testimonial.findFirst({ where: { name: t.name } });
-    if (!existing) await db.testimonial.create({ data: t });
-  }
+  ].map((t, i) => ({ id: randomUUID(), ...t, photoUrl: null as string | null, sortOrder: i }));
+  write("testimonials", testimonials);
 
   // ── FAQs ─────────────────────────────────────────────────────────────
-  const faqDefs = [
+  const faqs = [
     { category: "booking", question: "How do I book a vehicle or tour package?", answer: "You can book directly on our website via the Book Now button, call us at 9795903030, or message us on WhatsApp. We confirm every booking with a unique Booking ID." },
     { category: "booking", question: "Do I need to pay in advance?", answer: "A small advance may be requested to confirm outstation trips and multi-day packages; local city rides can usually be paid on completion." },
     { category: "vehicles", question: "Are your drivers experienced with pilgrimage routes?", answer: "Yes — all our drivers are local, background-verified, and experienced with Varanasi, Sarnath, Ayodhya and Prayagraj routes." },
     { category: "general", question: "Do you provide 24x7 support?", answer: "Yes, our support team is available 24x7 by phone and WhatsApp for any assistance during your trip." },
-  ];
-  for (const f of faqDefs) {
-    const existing = await db.faq.findFirst({ where: { question: f.question } });
-    if (!existing) await db.faq.create({ data: f });
-  }
+  ].map((f, i) => ({ id: randomUUID(), ...f, sortOrder: i }));
+  write("faqs", faqs);
 
   // ── Settings ─────────────────────────────────────────────────────────
-  const settingsDefs: Record<string, string> = {
+  write("settings", {
     site_phone_primary: "9795903030",
     site_phone_secondary: "8081947598",
     site_landline: "0542-4543026",
@@ -389,19 +402,18 @@ async function main() {
     site_whatsapp: "919795903030",
     site_address: "Varanasi, Uttar Pradesh, India",
     years_in_service: "25",
-  };
-  for (const [key, value] of Object.entries(settingsDefs)) {
-    await db.setting.upsert({ where: { key }, update: { value }, create: { key, value } });
-  }
+  });
+
+  // ── Empty collections used by the app but with no seed content yet ────
+  write("bookings", []);
+  write("contactEnquiries", []);
+  write("coupons", []);
+  write("drivers", []);
 
   console.log("Seed complete.");
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await db.$disconnect();
-  });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

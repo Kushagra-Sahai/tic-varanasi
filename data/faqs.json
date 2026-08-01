@@ -1,0 +1,30 @@
+[
+  {
+    "id": "edf9d387-fecc-4a1b-938f-a07a12a166e7",
+    "category": "booking",
+    "question": "How do I book a vehicle or tour package?",
+    "answer": "You can book directly on our website via the Book Now button, call us at 9795903030, or message us on WhatsApp. We confirm every booking with a unique Booking ID.",
+    "sortOrder": 0
+  },
+  {
+    "id": "48239e53-b7d4-4dc9-b15e-c1bcadf49a16",
+    "category": "booking",
+    "question": "Do I need to pay in advance?",
+    "answer": "A small advance may be requested to confirm outstation trips and multi-day packages; local city rides can usually be paid on completion.",
+    "sortOrder": 1
+  },
+  {
+    "id": "f051edd3-81c9-41ed-a4d5-dc3b9e12d1db",
+    "category": "vehicles",
+    "question": "Are your drivers experienced with pilgrimage routes?",
+    "answer": "Yes — all our drivers are local, background-verified, and experienced with Varanasi, Sarnath, Ayodhya and Prayagraj routes.",
+    "sortOrder": 2
+  },
+  {
+    "id": "ea87d79a-0623-48fc-890e-d87d0627e1b9",
+    "category": "general",
+    "question": "Do you provide 24x7 support?",
+    "answer": "Yes, our support team is available 24x7 by phone and WhatsApp for any assistance during your trip.",
+    "sortOrder": 3
+  }
+]

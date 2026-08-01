@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { db } from "@/lib/db";
+import { listFaqs } from "@/server/services/faqService";
 
 export const metadata: Metadata = {
   title: "Frequently Asked Questions",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function FaqsPage() {
-  const faqs = await db.faq.findMany({ orderBy: [{ category: "asc" }, { sortOrder: "asc" }] });
+  const faqs = await listFaqs();
 
   const jsonLd = {
     "@context": "https://schema.org",

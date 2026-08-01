@@ -1,0 +1,409 @@
+[
+  {
+    "id": "5393cecd-57ea-46ae-8c63-cc6b2d67222e",
+    "slug": "kashi-vishwanath-darshan",
+    "title": "Kashi Vishwanath Darshan & Ganga Aarti",
+    "summary": "A 2-day spiritual immersion covering the Kashi Vishwanath temple, Dashashwamedh Ghat Aarti and boat ride.",
+    "description": "Experience the soul of Varanasi with VIP darshan at the Kashi Vishwanath Dham, a sunrise boat ride along the ghats, and the mesmerising Ganga Aarti at Dashashwamedh Ghat. Includes a guided walk through the old city lanes.",
+    "durationDays": 2,
+    "durationNights": 1,
+    "price": 6500,
+    "discountPrice": 5499,
+    "maxGroupSize": 20,
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "d909f8b7-baa8-43d9-97a1-107bf41da4f5",
+        "url": "https://picsum.photos/seed/kashi-vishwanath-darshan-0/1200/800",
+        "alt": "Kashi Vishwanath Darshan & Ganga Aarti",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "86bb3529-35b3-43c0-a893-6cca7af69096",
+        "url": "https://picsum.photos/seed/kashi-vishwanath-darshan-1/1200/800",
+        "alt": "Kashi Vishwanath Darshan & Ganga Aarti",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "1255a811-41da-42bc-8bf2-26393078f641",
+        "url": "https://picsum.photos/seed/kashi-vishwanath-darshan-2/1200/800",
+        "alt": "Kashi Vishwanath Darshan & Ganga Aarti",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "itinerary": [
+      {
+        "id": "546cb36d-cbf9-4836-ae25-b5d86a834069",
+        "dayNumber": 1,
+        "title": "Arrival & Ganga Aarti",
+        "details": "Airport/station pickup, hotel check-in, evening Ganga Aarti at Dashashwamedh Ghat."
+      },
+      {
+        "id": "1bfd2c0f-19aa-448a-9e13-e984db111b5a",
+        "dayNumber": 2,
+        "title": "Kashi Vishwanath Darshan & Departure",
+        "details": "Early morning boat ride, VIP darshan at Kashi Vishwanath Dham, old city walk, drop-off."
+      }
+    ],
+    "inclusions": [
+      {
+        "id": "bdc262d8-3dd4-4fad-a444-ca3f044cbf32",
+        "label": "AC vehicle for all transfers"
+      },
+      {
+        "id": "c9de4d63-a23a-4312-8cfe-61d4b20c760f",
+        "label": "1 night hotel stay"
+      },
+      {
+        "id": "258797bf-eb02-4814-afb5-991b98f05e8f",
+        "label": "VIP darshan assistance"
+      },
+      {
+        "id": "373db629-f78b-48c5-a1f7-353e70c0f373",
+        "label": "English/Hindi speaking guide"
+      }
+    ],
+    "exclusions": [
+      {
+        "id": "1a4f050b-376a-454c-9945-3e830c7724b7",
+        "label": "Personal expenses"
+      },
+      {
+        "id": "cc34da2d-56f2-444a-8584-b7615a5762a3",
+        "label": "Temple donations"
+      },
+      {
+        "id": "ef2b56b2-36fa-4ece-a1bf-ee036b7e6219",
+        "label": "Meals not specified"
+      }
+    ]
+  },
+  {
+    "id": "2d48a5dd-4997-4308-896a-0817bf062667",
+    "slug": "varanasi-sarnath-day-tour",
+    "title": "Varanasi & Sarnath Day Tour",
+    "summary": "A full-day circuit covering Varanasi's ghats and the Buddhist heritage of Sarnath.",
+    "description": "Visit the major ghats of Varanasi, the Kashi Vishwanath temple, and travel onward to Sarnath to see the Dhamek Stupa and Archaeological Museum — all in a single comfortable day.",
+    "durationDays": 1,
+    "durationNights": 0,
+    "price": 3200,
+    "discountPrice": null,
+    "maxGroupSize": 20,
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "49a034f2-3195-4f92-a100-d54d54499257",
+        "url": "https://picsum.photos/seed/varanasi-sarnath-day-tour-0/1200/800",
+        "alt": "Varanasi & Sarnath Day Tour",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "8ebfb68b-527a-4407-9366-c3f86e2f1f4b",
+        "url": "https://picsum.photos/seed/varanasi-sarnath-day-tour-1/1200/800",
+        "alt": "Varanasi & Sarnath Day Tour",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "65411b80-2024-4088-b9e8-9282ccd4f554",
+        "url": "https://picsum.photos/seed/varanasi-sarnath-day-tour-2/1200/800",
+        "alt": "Varanasi & Sarnath Day Tour",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "itinerary": [
+      {
+        "id": "56484b25-2736-4565-b27d-aa5d1d5cc839",
+        "dayNumber": 1,
+        "title": "Full Day Circuit",
+        "details": "Morning ghat visit, Kashi Vishwanath darshan, lunch break, Sarnath sightseeing, evening drop."
+      }
+    ],
+    "inclusions": [
+      {
+        "id": "37e3ab60-15a3-43a0-b65a-18c4fcdad08d",
+        "label": "AC vehicle"
+      },
+      {
+        "id": "f75c1ac9-8080-4879-aa51-0a451b6c2d21",
+        "label": "Guide"
+      },
+      {
+        "id": "6516f61e-5af8-4fc3-adeb-dc822608991b",
+        "label": "Bottled water"
+      }
+    ],
+    "exclusions": [
+      {
+        "id": "c78cb99f-239a-4177-94ff-1d62223c84d2",
+        "label": "Lunch"
+      },
+      {
+        "id": "679091d9-4eeb-4ece-992a-759f3073af7e",
+        "label": "Entry tickets"
+      }
+    ]
+  },
+  {
+    "id": "1712cffe-0bdd-424d-af20-cb4fd7da40d7",
+    "slug": "ayodhya-ram-mandir-tour",
+    "title": "Ayodhya Ram Mandir Pilgrimage",
+    "summary": "A 2-day trip from Varanasi to the Ram Mandir and sacred sites of Ayodhya.",
+    "description": "Travel comfortably from Varanasi to Ayodhya for darshan at the Ram Mandir, Hanuman Garhi and Kanak Bhawan, with an overnight stay and a relaxed return journey.",
+    "durationDays": 2,
+    "durationNights": 1,
+    "price": 8500,
+    "discountPrice": 7499,
+    "maxGroupSize": 20,
+    "isActive": true,
+    "isFeatured": false,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "70ff3787-7ec3-45df-9cf6-5e71ae0fea9a",
+        "url": "https://picsum.photos/seed/ayodhya-ram-mandir-tour-0/1200/800",
+        "alt": "Ayodhya Ram Mandir Pilgrimage",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "074d0572-10fd-4650-a04b-40914f7df5dd",
+        "url": "https://picsum.photos/seed/ayodhya-ram-mandir-tour-1/1200/800",
+        "alt": "Ayodhya Ram Mandir Pilgrimage",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "449a5cab-5c97-4c61-914c-90ba9d23946a",
+        "url": "https://picsum.photos/seed/ayodhya-ram-mandir-tour-2/1200/800",
+        "alt": "Ayodhya Ram Mandir Pilgrimage",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "itinerary": [
+      {
+        "id": "d57f4074-ed73-4c30-8c8a-1fc1b4604846",
+        "dayNumber": 1,
+        "title": "Varanasi to Ayodhya",
+        "details": "Early departure, arrival and check-in, evening Sarayu aarti."
+      },
+      {
+        "id": "1adc41b5-3131-4820-a60f-4e6d611309a0",
+        "dayNumber": 2,
+        "title": "Ram Mandir Darshan & Return",
+        "details": "Morning darshan at Ram Mandir, Hanuman Garhi, Kanak Bhawan, drive back to Varanasi."
+      }
+    ],
+    "inclusions": [
+      {
+        "id": "9a8997c2-3bca-42d4-8529-19915914ac5a",
+        "label": "AC vehicle"
+      },
+      {
+        "id": "258628b1-9206-42de-9313-3102105d14b7",
+        "label": "1 night hotel"
+      },
+      {
+        "id": "56a94e15-e512-4426-ae82-b3cb1d38f5b1",
+        "label": "Toll & parking"
+      },
+      {
+        "id": "857b151c-31e4-47d5-8e3a-b3bf03e381c0",
+        "label": "Driver allowance"
+      }
+    ],
+    "exclusions": [
+      {
+        "id": "06336d95-5073-43c7-a18b-b1e803e8c18d",
+        "label": "Meals"
+      },
+      {
+        "id": "66c1d632-aa6a-4341-a6c5-7394666febb0",
+        "label": "Personal expenses"
+      }
+    ]
+  },
+  {
+    "id": "26477ef3-dd4c-4f7c-b3b2-debaa43ec273",
+    "slug": "prayagraj-sangam-tour",
+    "title": "Prayagraj Sangam Day Trip",
+    "summary": "A day trip to the sacred confluence of three rivers at Prayagraj.",
+    "description": "Visit the Triveni Sangam, Anand Bhawan and the historic Allahabad Fort on a comfortable day trip from Varanasi.",
+    "durationDays": 1,
+    "durationNights": 0,
+    "price": 3800,
+    "discountPrice": null,
+    "maxGroupSize": 20,
+    "isActive": true,
+    "isFeatured": false,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "fc9a55f7-58a1-485f-9111-579a5493bbe7",
+        "url": "https://picsum.photos/seed/prayagraj-sangam-tour-0/1200/800",
+        "alt": "Prayagraj Sangam Day Trip",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "a6a37bd3-17a9-4334-985c-779ffeda1645",
+        "url": "https://picsum.photos/seed/prayagraj-sangam-tour-1/1200/800",
+        "alt": "Prayagraj Sangam Day Trip",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "cf0f1c22-2f01-4f10-8e2b-20181e5dddfc",
+        "url": "https://picsum.photos/seed/prayagraj-sangam-tour-2/1200/800",
+        "alt": "Prayagraj Sangam Day Trip",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "itinerary": [
+      {
+        "id": "a544a055-237d-435c-89ea-a019632af16e",
+        "dayNumber": 1,
+        "title": "Sangam Day Trip",
+        "details": "Morning departure, Sangam boat ride, Anand Bhawan, evening return to Varanasi."
+      }
+    ],
+    "inclusions": [
+      {
+        "id": "3452bf0c-78c7-48c6-b221-03b81aef66d2",
+        "label": "AC vehicle"
+      },
+      {
+        "id": "abc4fc2d-b449-4580-989a-e8bf3eb1b550",
+        "label": "Boat ride at Sangam"
+      }
+    ],
+    "exclusions": [
+      {
+        "id": "4dcb8a72-da24-4476-aa77-d98ffc34986f",
+        "label": "Meals"
+      },
+      {
+        "id": "9f89677f-e9cd-413c-acb6-ba78b8fde3fb",
+        "label": "Guide"
+      }
+    ]
+  },
+  {
+    "id": "88682bf1-cbbb-4d5c-94fe-0238175801ab",
+    "slug": "spiritual-circuit-4-cities",
+    "title": "Spiritual Circuit: Varanasi–Ayodhya–Prayagraj–Sarnath",
+    "summary": "A comprehensive 5-day pilgrimage covering all four major sacred sites.",
+    "description": "Our signature multi-day circuit connecting Kashi, Ayodhya, Prayagraj and Sarnath with comfortable overnight stays, private AC transport and experienced guides throughout.",
+    "durationDays": 5,
+    "durationNights": 4,
+    "price": 22000,
+    "discountPrice": 18999,
+    "maxGroupSize": 20,
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "75903cb3-25ab-4e41-a47a-8058c8f347da",
+        "url": "https://picsum.photos/seed/spiritual-circuit-4-cities-0/1200/800",
+        "alt": "Spiritual Circuit: Varanasi–Ayodhya–Prayagraj–Sarnath",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "66b77680-39c5-4719-97ce-77a081678d7f",
+        "url": "https://picsum.photos/seed/spiritual-circuit-4-cities-1/1200/800",
+        "alt": "Spiritual Circuit: Varanasi–Ayodhya–Prayagraj–Sarnath",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "86066b98-8334-4977-9f5a-3193e1a4ff0f",
+        "url": "https://picsum.photos/seed/spiritual-circuit-4-cities-2/1200/800",
+        "alt": "Spiritual Circuit: Varanasi–Ayodhya–Prayagraj–Sarnath",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "itinerary": [
+      {
+        "id": "55864013-67dc-42c8-850d-54e865587f4d",
+        "dayNumber": 1,
+        "title": "Arrival in Varanasi",
+        "details": "Check-in, evening Ganga Aarti."
+      },
+      {
+        "id": "b43699ef-8ce6-44bd-a741-af8ed212392c",
+        "dayNumber": 2,
+        "title": "Varanasi & Sarnath",
+        "details": "Kashi Vishwanath darshan, Sarnath sightseeing."
+      },
+      {
+        "id": "fe6363f7-1982-4852-a462-6c3aa5a7fc75",
+        "dayNumber": 3,
+        "title": "Varanasi to Ayodhya",
+        "details": "Drive to Ayodhya, Ram Mandir darshan."
+      },
+      {
+        "id": "7b9621b6-a189-4032-94b7-afa7fa481c11",
+        "dayNumber": 4,
+        "title": "Ayodhya to Prayagraj",
+        "details": "Drive to Prayagraj, Sangam visit."
+      },
+      {
+        "id": "054e0ba3-e6db-43fc-85a2-5484854eef62",
+        "dayNumber": 5,
+        "title": "Prayagraj to Varanasi & Departure",
+        "details": "Return drive, drop-off."
+      }
+    ],
+    "inclusions": [
+      {
+        "id": "dbf9db81-b48b-44ed-8755-6413169ffc36",
+        "label": "AC vehicle for full circuit"
+      },
+      {
+        "id": "f2259977-590c-42e9-8cb5-eefb6cd5aaff",
+        "label": "4 nights hotel"
+      },
+      {
+        "id": "07c02694-7f83-49fa-b718-9bd5770772cd",
+        "label": "Daily breakfast"
+      },
+      {
+        "id": "f3b52ae6-caf2-4623-967c-cb23211d8f8a",
+        "label": "Dedicated guide"
+      }
+    ],
+    "exclusions": [
+      {
+        "id": "757dba1e-7876-43d4-a9f4-bd16dac20f18",
+        "label": "Lunch & dinner"
+      },
+      {
+        "id": "e1cdae09-a864-4584-ae3f-f86e45dce441",
+        "label": "Temple donations"
+      },
+      {
+        "id": "ed5df8f7-8e8f-4961-b288-bd5e839ee42d",
+        "label": "Personal expenses"
+      }
+    ]
+  }
+]

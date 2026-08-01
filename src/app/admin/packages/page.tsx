@@ -1,11 +1,8 @@
-import { db } from "@/lib/db";
+import { listAllPackagesForAdmin } from "@/server/services/packageService";
 import { PackagesManager } from "@/components/admin/PackagesManager";
 
 export default async function AdminPackagesPage() {
-  const packages = await db.package.findMany({
-    include: { images: { orderBy: { sortOrder: "asc" } } },
-    orderBy: { createdAt: "desc" },
-  });
+  const packages = await listAllPackagesForAdmin();
 
   return (
     <div>
@@ -14,13 +11,7 @@ export default async function AdminPackagesPage() {
         Manage pricing, images and publishing status for tour packages.
       </p>
       <div className="mt-6">
-        <PackagesManager
-          packages={packages.map((p) => ({
-            ...p,
-            price: Number(p.price),
-            discountPrice: p.discountPrice != null ? Number(p.discountPrice) : null,
-          }))}
-        />
+        <PackagesManager packages={packages} />
       </div>
     </div>
   );

@@ -1,13 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/db";
+import { mutateCollection, mutateRecord, newId } from "@/lib/jsondb";
 import { requireRole, STAFF_ROLES } from "@/lib/rbac";
 import { vehicleUpsertSchema } from "@/lib/validation/vehicle";
 import { packageUpsertSchema } from "@/lib/validation/package";
 import { bookingStatusUpdateSchema } from "@/lib/validation/booking";
 import * as bookingService from "@/server/services/bookingService";
 import type { ActionResult } from "@/server/actions/bookingActions";
+import type { ContactEnquiry, Package, Settings, Vehicle } from "@/lib/entities";
 
 function splitLines(value: string | undefined) {
   return (value ?? "")
@@ -32,37 +33,56 @@ export async function upsertVehicleAction(
 
   const raw = input as { imagesText?: string; featuresText?: string };
   const imageUrls = splitLines(raw.imagesText);
-  const features = splitLines(raw.featuresText);
+  const featureLabels = splitLines(raw.featuresText);
   const { id, ...data } = parsed.data;
 
   try {
-    const vehicle = id
-      ? await db.vehicle.update({ where: { id }, data })
-      : await db.vehicle.create({ data });
+    let saved!: Vehicle;
+    await mutateCollection<Vehicle>("vehicles", (rows) => {
+      const now = new Date().toISOString();
+      const images = imageUrls.map((url, i) => ({
+        id: newId(),
+        url,
+        alt: data.name,
+        sortOrder: i,
+        isPrimary: i === 0,
+      }));
+      const features = featureLabels.map((label) => ({ id: newId(), label, icon: null }));
 
-    if (imageUrls.length > 0) {
-      await db.vehicleImage.deleteMany({ where: { vehicleId: vehicle.id } });
-      await db.vehicleImage.createMany({
-        data: imageUrls.map((url, i) => ({
-          vehicleId: vehicle.id,
-          url,
-          alt: vehicle.name,
-          sortOrder: i,
-          isPrimary: i === 0,
-        })),
-      });
-    }
-    if (features.length > 0) {
-      await db.vehicleFeature.deleteMany({ where: { vehicleId: vehicle.id } });
-      await db.vehicleFeature.createMany({
-        data: features.map((label) => ({ vehicleId: vehicle.id, label })),
-      });
-    }
+      if (id) {
+        const idx = rows.findIndex((v) => v.id === id);
+        if (idx === -1) throw new Error("Vehicle not found");
+        const existing = rows[idx];
+        const next: Vehicle = {
+          ...existing,
+          ...data,
+          updatedAt: now,
+          images: imageUrls.length > 0 ? images : existing.images,
+          features: featureLabels.length > 0 ? features : existing.features,
+        };
+        saved = next;
+        const copy = [...rows];
+        copy[idx] = next;
+        return copy;
+      }
+
+      const created: Vehicle = {
+        id: newId(),
+        ...data,
+        createdAt: now,
+        updatedAt: now,
+        images,
+        features,
+        pricingRules: [],
+      };
+      saved = created;
+      return [...rows, created];
+    });
 
     revalidatePath("/admin/vehicles");
     revalidatePath("/car-rental");
-    revalidatePath(`/vehicles/${vehicle.slug}`);
-    return { ok: true, data: { id: vehicle.id } };
+    revalidatePath(`/vehicles/${saved.slug}`);
+    return { ok: true, data: { id: saved.id } };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Could not save vehicle" };
   }
@@ -71,7 +91,7 @@ export async function upsertVehicleAction(
 export async function deleteVehicleAction(id: string): Promise<ActionResult<null>> {
   await requireRole(...STAFF_ROLES);
   try {
-    await db.vehicle.delete({ where: { id } });
+    await mutateCollection<Vehicle>("vehicles", (rows) => rows.filter((v) => v.id !== id));
     revalidatePath("/admin/vehicles");
     revalidatePath("/car-rental");
     return { ok: true, data: null };
@@ -99,27 +119,53 @@ export async function upsertPackageAction(
   const { id, ...data } = parsed.data;
 
   try {
-    const pkg = id
-      ? await db.package.update({ where: { id }, data })
-      : await db.package.create({ data });
+    let saved!: Package;
+    await mutateCollection<Package>("packages", (rows) => {
+      const now = new Date().toISOString();
+      const images = imageUrls.map((url, i) => ({
+        id: newId(),
+        url,
+        alt: data.title,
+        sortOrder: i,
+        isPrimary: i === 0,
+      }));
 
-    if (imageUrls.length > 0) {
-      await db.packageImage.deleteMany({ where: { packageId: pkg.id } });
-      await db.packageImage.createMany({
-        data: imageUrls.map((url, i) => ({
-          packageId: pkg.id,
-          url,
-          alt: pkg.title,
-          sortOrder: i,
-          isPrimary: i === 0,
-        })),
-      });
-    }
+      if (id) {
+        const idx = rows.findIndex((p) => p.id === id);
+        if (idx === -1) throw new Error("Package not found");
+        const existing = rows[idx];
+        const next: Package = {
+          ...existing,
+          ...data,
+          discountPrice: data.discountPrice ?? null,
+          updatedAt: now,
+          images: imageUrls.length > 0 ? images : existing.images,
+        };
+        saved = next;
+        const copy = [...rows];
+        copy[idx] = next;
+        return copy;
+      }
+
+      const created: Package = {
+        id: newId(),
+        ...data,
+        discountPrice: data.discountPrice ?? null,
+        createdAt: now,
+        updatedAt: now,
+        images,
+        itinerary: [],
+        inclusions: [],
+        exclusions: [],
+      };
+      saved = created;
+      return [...rows, created];
+    });
 
     revalidatePath("/admin/packages");
     revalidatePath("/tour-packages");
-    revalidatePath(`/tour-packages/${pkg.slug}`);
-    return { ok: true, data: { id: pkg.id } };
+    revalidatePath(`/tour-packages/${saved.slug}`);
+    return { ok: true, data: { id: saved.id } };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : "Could not save package" };
   }
@@ -128,7 +174,7 @@ export async function upsertPackageAction(
 export async function deletePackageAction(id: string): Promise<ActionResult<null>> {
   await requireRole(...STAFF_ROLES);
   try {
-    await db.package.delete({ where: { id } });
+    await mutateCollection<Package>("packages", (rows) => rows.filter((p) => p.id !== id));
     revalidatePath("/admin/packages");
     revalidatePath("/tour-packages");
     return { ok: true, data: null };
@@ -162,7 +208,9 @@ export async function toggleEnquiryReadAction(
   isRead: boolean,
 ): Promise<ActionResult<null>> {
   await requireRole(...STAFF_ROLES);
-  await db.contactEnquiry.update({ where: { id }, data: { isRead } });
+  await mutateCollection<ContactEnquiry>("contactEnquiries", (rows) =>
+    rows.map((e) => (e.id === id ? { ...e, isRead } : e)),
+  );
   revalidatePath("/admin/enquiries");
   return { ok: true, data: null };
 }
@@ -171,11 +219,7 @@ export async function updateSettingsAction(
   values: Record<string, string>,
 ): Promise<ActionResult<null>> {
   await requireRole(...STAFF_ROLES);
-  await Promise.all(
-    Object.entries(values).map(([key, value]) =>
-      db.setting.upsert({ where: { key }, update: { value }, create: { key, value } }),
-    ),
-  );
+  await mutateRecord<Settings>("settings", (current) => ({ ...(current ?? {}), ...values }));
   revalidatePath("/admin/settings");
   revalidatePath("/", "layout");
   return { ok: true, data: null };

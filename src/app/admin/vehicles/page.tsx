@@ -1,13 +1,10 @@
-import { db } from "@/lib/db";
+import { listAllVehiclesForAdmin, listVehicleCategories } from "@/server/services/vehicleService";
 import { VehiclesManager } from "@/components/admin/VehiclesManager";
 
 export default async function AdminVehiclesPage() {
   const [vehicles, categories] = await Promise.all([
-    db.vehicle.findMany({
-      include: { category: true, images: { orderBy: { sortOrder: "asc" } }, features: true },
-      orderBy: { createdAt: "desc" },
-    }),
-    db.vehicleCategory.findMany({ orderBy: { sortOrder: "asc" } }),
+    listAllVehiclesForAdmin(),
+    listVehicleCategories(),
   ]);
 
   return (
@@ -21,16 +18,7 @@ export default async function AdminVehiclesPage() {
         </div>
       </div>
       <div className="mt-6">
-        <VehiclesManager
-          vehicles={vehicles.map((v) => ({
-            ...v,
-            basePrice: Number(v.basePrice),
-            pricePerKm: Number(v.pricePerKm),
-            driverAllowance: Number(v.driverAllowance),
-            nightCharge: Number(v.nightCharge),
-          }))}
-          categories={categories}
-        />
+        <VehiclesManager vehicles={vehicles} categories={categories} />
       </div>
     </div>
   );

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "acae960e-04b8-4f47-bfa0-912224e5eda3",
+    "name": "Rajesh & Family",
+    "location": "Delhi",
+    "message": "TIC made our Kashi Vishwanath darshan effortless. The driver was courteous and the car was spotless. Highly recommend for family pilgrimage trips.",
+    "rating": 5,
+    "isFeatured": true,
+    "photoUrl": null,
+    "sortOrder": 0
+  },
+  {
+    "id": "ba649d01-1577-4419-a58c-1106e11083cb",
+    "name": "Priya Sharma",
+    "location": "Mumbai",
+    "message": "Booked the Ayodhya package for my parents — TIC handled everything from pickup to hotel to darshan assistance. Excellent service.",
+    "rating": 5,
+    "isFeatured": true,
+    "photoUrl": null,
+    "sortOrder": 1
+  },
+  {
+    "id": "5fea6c7d-bac2-4713-b07c-b9c6d8cdb4ec",
+    "name": "James Carter",
+    "location": "United Kingdom",
+    "message": "As a foreign tourist, I felt completely safe and well guided throughout Varanasi. The Ganga Aarti boat ride was unforgettable.",
+    "rating": 5,
+    "isFeatured": true,
+    "photoUrl": null,
+    "sortOrder": 2
+  },
+  {
+    "id": "ca3fdc14-c76c-434f-99f3-7c3983c5b12f",
+    "name": "Anita Verma",
+    "location": "Lucknow",
+    "message": "Corporate airport transfer was punctual and professional every single time. Our go-to travel partner in Varanasi now.",
+    "rating": 4,
+    "isFeatured": false,
+    "photoUrl": null,
+    "sortOrder": 3
+  }
+]

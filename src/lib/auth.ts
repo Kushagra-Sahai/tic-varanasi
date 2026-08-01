@@ -1,15 +1,17 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
-import { db } from "@/lib/db";
+import { findUserByEmail, findOrCreateUserByPhone, consumeValidOtp } from "@/server/services/userService";
 import type { Role } from "@/lib/constants";
 import { authConfig } from "@/lib/auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  adapter: PrismaAdapter(db),
+  // No adapter: sessions are JWT-only, so OAuth/Credentials profiles flow
+  // straight into the jwt() callback without needing a persisted
+  // Account/Session row. User records for Credentials sign-in are read from
+  // the JSON store directly inside authorize() below.
   session: { strategy: "jwt" },
   providers: [
     Google({
@@ -29,7 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const password = credentials?.password as string | undefined;
         if (!email || !password) return null;
 
-        const user = await db.user.findUnique({ where: { email } });
+        const user = await findUserByEmail(email);
         if (!user?.passwordHash || !user.isActive) return null;
 
         const valid = await bcrypt.compare(password, user.passwordHash);
@@ -38,7 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return { id: user.id, name: user.name, email: user.email, role: user.role as Role };
       },
     }),
-    // Customer login: phone + OTP verified against OtpToken.
+    // Customer login: phone + OTP verified against the JSON otpTokens store.
     Credentials({
       id: "otp",
       name: "Phone OTP",
@@ -51,19 +53,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const code = credentials?.code as string | undefined;
         if (!phone || !code) return null;
 
-        const otp = await db.otpToken.findFirst({
-          where: { phone, code, consumed: false, expiresAt: { gt: new Date() } },
-          orderBy: { createdAt: "desc" },
-        });
+        const otp = await consumeValidOtp(phone, code);
         if (!otp) return null;
 
-        await db.otpToken.update({ where: { id: otp.id }, data: { consumed: true } });
-
-        const user = await db.user.upsert({
-          where: { phone },
-          update: {},
-          create: { phone, name: `Guest ${phone.slice(-4)}`, role: "customer" },
-        });
+        const user = await findOrCreateUserByPhone(phone);
         if (!user.isActive) return null;
 
         return { id: user.id, name: user.name, email: user.email, role: user.role as Role };

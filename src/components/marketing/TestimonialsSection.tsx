@@ -1,13 +1,9 @@
 import { Star } from "lucide-react";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
-import { db } from "@/lib/db";
+import { listFeaturedTestimonials } from "@/server/services/testimonialService";
 
 export async function TestimonialsSection() {
-  const testimonials = await db.testimonial.findMany({
-    where: { isFeatured: true },
-    orderBy: { sortOrder: "asc" },
-    take: 6,
-  });
+  const testimonials = await listFeaturedTestimonials(6);
   if (testimonials.length === 0) return null;
 
   return (

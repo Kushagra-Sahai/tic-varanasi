@@ -11,9 +11,7 @@ export default async function AdminEnquiriesPage() {
         Messages submitted through the website contact form.
       </p>
       <div className="mt-6">
-        <EnquiriesManager
-          enquiries={enquiries.map((e) => ({ ...e, createdAt: e.createdAt.toISOString() }))}
-        />
+        <EnquiriesManager enquiries={enquiries} />
       </div>
     </div>
   );

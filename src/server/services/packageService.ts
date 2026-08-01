@@ -1,27 +1,41 @@
 import "server-only";
-import { db } from "@/lib/db";
+import { readCollection } from "@/lib/jsondb";
+import type { Package } from "@/lib/entities";
+
+function sortImages<T extends Package>(pkg: T): T {
+  return { ...pkg, images: [...pkg.images].sort((a, b) => a.sortOrder - b.sortOrder) };
+}
 
 export async function listPackages(options?: { featuredOnly?: boolean }) {
-  return db.package.findMany({
-    where: { isActive: true, isFeatured: options?.featuredOnly ? true : undefined },
-    include: { images: { orderBy: { sortOrder: "asc" } } },
-    orderBy: [{ isFeatured: "desc" }, { title: "asc" }],
+  const packages = await readCollection<Package>("packages");
+  const filtered = packages.filter((p) => p.isActive && (!options?.featuredOnly || p.isFeatured));
+
+  filtered.sort((a, b) => {
+    if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+    return a.title.localeCompare(b.title);
   });
+
+  return filtered.map(sortImages);
 }
 
 export async function getPackageBySlug(slug: string) {
-  return db.package.findUnique({
-    where: { slug, isActive: true },
-    include: {
-      images: { orderBy: { sortOrder: "asc" } },
-      itinerary: { orderBy: { dayNumber: "asc" } },
-      inclusions: true,
-      exclusions: true,
-      reviews: { where: { isApproved: true }, orderBy: { createdAt: "desc" }, take: 10 },
-    },
-  });
+  const packages = await readCollection<Package>("packages");
+  const pkg = packages.find((p) => p.slug === slug && p.isActive);
+  if (!pkg) return null;
+
+  return {
+    ...sortImages(pkg),
+    itinerary: [...pkg.itinerary].sort((a, b) => a.dayNumber - b.dayNumber),
+  };
 }
 
 export async function listFeaturedPackages(take = 6) {
   return listPackages({ featuredOnly: true }).then((p) => p.slice(0, take));
+}
+
+/** Admin panel: every package regardless of active/featured status. */
+export async function listAllPackagesForAdmin() {
+  const packages = await readCollection<Package>("packages");
+  const sorted = [...packages].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  return sorted.map(sortImages);
 }

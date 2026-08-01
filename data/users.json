@@ -1,0 +1,12 @@
+[
+  {
+    "id": "5556ef48-cbf3-4c69-a010-d6b38d03e5db",
+    "name": "TIC Admin",
+    "email": "ticvns@gmail.com",
+    "phone": null,
+    "passwordHash": "$2b$10$lZsZg.4os7GYsRkjFaFSku6PIMcuFaTjsZ4pRMFeniRPD5xuVfk96",
+    "role": "admin",
+    "isActive": true,
+    "createdAt": "2026-08-01T11:42:32.389Z"
+  }
+]

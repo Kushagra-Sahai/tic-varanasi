@@ -1,13 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
-import { db } from "@/lib/db";
+import { listDestinations } from "@/server/services/destinationService";
 
 export async function DestinationsStrip() {
-  const destinations = await db.destination.findMany({
-    where: { isActive: true },
-    take: 4,
-  });
+  const destinations = await listDestinations({ take: 4 });
   if (destinations.length === 0) return null;
 
   return (

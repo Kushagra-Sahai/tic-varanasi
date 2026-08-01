@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeading } from "@/components/marketing/SectionHeading";
-import { db } from "@/lib/db";
+import { listDestinations } from "@/server/services/destinationService";
 
 export const metadata: Metadata = {
   title: "Destinations",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DestinationsPage() {
-  const destinations = await db.destination.findMany({ where: { isActive: true } });
+  const destinations = await listDestinations();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">

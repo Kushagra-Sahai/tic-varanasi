@@ -1,15 +1,9 @@
-import { db } from "@/lib/db";
+import { listBookings } from "@/server/services/bookingService";
+import { listAvailableDrivers } from "@/server/services/driverService";
 import { BookingsManager } from "@/components/admin/BookingsManager";
 
 export default async function AdminBookingsPage() {
-  const [bookings, drivers] = await Promise.all([
-    db.booking.findMany({
-      include: { vehicle: true, package: true },
-      orderBy: { createdAt: "desc" },
-      take: 200,
-    }),
-    db.driver.findMany({ include: { user: true }, where: { isAvailable: true } }),
-  ]);
+  const [bookings, drivers] = await Promise.all([listBookings(), listAvailableDrivers()]);
 
   return (
     <div>
@@ -26,11 +20,11 @@ export default async function AdminBookingsPage() {
             customerPhone: b.customerPhone,
             vehicleName: b.vehicle?.name ?? null,
             packageTitle: b.package?.title ?? null,
-            pickupDate: b.pickupDate.toISOString(),
-            totalAmount: Number(b.totalAmount),
+            pickupDate: b.pickupDate,
+            totalAmount: b.totalAmount,
             status: b.status,
           }))}
-          drivers={drivers.map((d) => ({ id: d.id, name: d.user.name }))}
+          drivers={drivers.map((d) => ({ id: d.id, name: d.name }))}
         />
       </div>
     </div>

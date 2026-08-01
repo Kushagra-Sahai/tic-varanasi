@@ -1,0 +1,662 @@
+[
+  {
+    "id": "dad3fb77-cadd-48dc-a88e-e4caccf2c534",
+    "slug": "swift-dzire",
+    "name": "Swift Dzire",
+    "categoryId": "2d2adde2-174b-42ad-b782-1ce6beae5ac9",
+    "capacity": 4,
+    "luggageCapacity": 2,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 800,
+    "pricePerKm": 12,
+    "driverAllowance": 300,
+    "nightCharge": 250,
+    "fuelType": "Diesel",
+    "description": "A comfortable, fuel-efficient sedan perfect for Varanasi darshan, Sarnath day trips and short outstation runs.",
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "b2be479e-0166-4f7d-a4f1-891772201f2d",
+        "url": "https://picsum.photos/seed/swift-dzire-0/1200/800",
+        "alt": "Swift Dzire — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "a79d1ed7-b029-4d2b-a21c-3697cc7ea7c6",
+        "url": "https://picsum.photos/seed/swift-dzire-1/1200/800",
+        "alt": "Swift Dzire — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "0f9fd87c-91fb-403a-b6ba-f31d1efebff1",
+        "url": "https://picsum.photos/seed/swift-dzire-2/1200/800",
+        "alt": "Swift Dzire — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "6f53b57d-c8cb-4259-a33e-e58ea3831cf9",
+        "label": "Air Conditioning",
+        "icon": null
+      },
+      {
+        "id": "57d6c9b4-fcf9-4530-80a2-6498424a52f2",
+        "label": "Music System",
+        "icon": null
+      },
+      {
+        "id": "d2c23b4e-73d6-4bcd-8a3f-d70aa7402503",
+        "label": "Clean Upholstery",
+        "icon": null
+      },
+      {
+        "id": "beab7a73-d6fb-43e5-9e8e-7bf29025d030",
+        "label": "GPS Tracking",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "dc0acbde-a158-49b9-ae71-913237643554",
+    "slug": "toyota-etios",
+    "name": "Toyota Etios",
+    "categoryId": "2d2adde2-174b-42ad-b782-1ce6beae5ac9",
+    "capacity": 4,
+    "luggageCapacity": 3,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 900,
+    "pricePerKm": 13,
+    "driverAllowance": 300,
+    "nightCharge": 250,
+    "fuelType": "Diesel",
+    "description": "Spacious boot and a smooth ride — a favourite for airport transfers and city sightseeing.",
+    "isActive": true,
+    "isFeatured": false,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "25ff5697-59ad-49cf-bcfb-cfab3a5bf3ed",
+        "url": "https://picsum.photos/seed/toyota-etios-0/1200/800",
+        "alt": "Toyota Etios — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "db5e43b7-29e6-42c4-b66d-1739bb09fa62",
+        "url": "https://picsum.photos/seed/toyota-etios-1/1200/800",
+        "alt": "Toyota Etios — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "71d86ecd-4cba-4cb9-a902-1f841609dc5a",
+        "url": "https://picsum.photos/seed/toyota-etios-2/1200/800",
+        "alt": "Toyota Etios — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "6379f28e-9433-4836-a024-f6dbafa54d5a",
+        "label": "Air Conditioning",
+        "icon": null
+      },
+      {
+        "id": "ddf139e9-653e-479d-9b84-6669ef1b6d84",
+        "label": "Extra Legroom",
+        "icon": null
+      },
+      {
+        "id": "0d110d87-cff5-491b-9e1e-12f3ed8ea1e3",
+        "label": "Phone Charger",
+        "icon": null
+      },
+      {
+        "id": "0c5a0519-d221-431a-9f07-d2cc1baa228b",
+        "label": "First Aid Kit",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "3c9b327b-4289-4e5e-90e8-b2fed470ba1a",
+    "slug": "maruti-ertiga",
+    "name": "Maruti Ertiga",
+    "categoryId": "ee66413a-854c-4bcd-8459-797b5df4a704",
+    "capacity": 6,
+    "luggageCapacity": 4,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 1400,
+    "pricePerKm": 15,
+    "driverAllowance": 350,
+    "nightCharge": 300,
+    "fuelType": "Diesel",
+    "description": "6-seater MPV ideal for small families visiting Kashi Vishwanath, Assi Ghat and Sarnath together.",
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "fe8f43c8-6166-428a-bc0b-3143dc24476e",
+        "url": "https://picsum.photos/seed/maruti-ertiga-0/1200/800",
+        "alt": "Maruti Ertiga — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "3c70d0fd-4d70-4b5c-a8ca-74f104731c13",
+        "url": "https://picsum.photos/seed/maruti-ertiga-1/1200/800",
+        "alt": "Maruti Ertiga — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "becff637-b67a-48f6-b867-d7fa20277c4a",
+        "url": "https://picsum.photos/seed/maruti-ertiga-2/1200/800",
+        "alt": "Maruti Ertiga — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "a664f6ca-1a43-453b-ac24-46a766abdd08",
+        "label": "Air Conditioning",
+        "icon": null
+      },
+      {
+        "id": "afeeab47-0c14-4767-ad43-e09046dba19d",
+        "label": "Third Row Seating",
+        "icon": null
+      },
+      {
+        "id": "fb3e1042-519c-480f-95d0-7e5969de8469",
+        "label": "Ample Luggage Space",
+        "icon": null
+      },
+      {
+        "id": "8beeee3f-0afa-4a1e-b731-ee8bc350d587",
+        "label": "Music System",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "873109d8-14e9-45f8-b869-780e0f8f5242",
+    "slug": "toyota-innova",
+    "name": "Toyota Innova",
+    "categoryId": "c26f84e9-db71-4fd1-82d7-8b0cbc84b446",
+    "capacity": 7,
+    "luggageCapacity": 5,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 1800,
+    "pricePerKm": 17,
+    "driverAllowance": 400,
+    "nightCharge": 350,
+    "fuelType": "Diesel",
+    "description": "The trusted 7-seater workhorse for multi-day pilgrimage circuits — Varanasi to Ayodhya to Prayagraj.",
+    "isActive": true,
+    "isFeatured": false,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "a2c71e23-2be1-44d9-9737-d77382a62d1b",
+        "url": "https://picsum.photos/seed/toyota-innova-0/1200/800",
+        "alt": "Toyota Innova — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "ad204de9-71d5-45a7-a833-cbaf5df9ca7f",
+        "url": "https://picsum.photos/seed/toyota-innova-1/1200/800",
+        "alt": "Toyota Innova — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "9e47d6f7-8949-4de0-b231-d22d7076a468",
+        "url": "https://picsum.photos/seed/toyota-innova-2/1200/800",
+        "alt": "Toyota Innova — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "7163dc2d-c6a0-4568-880b-ebbb5c7edfa5",
+        "label": "Air Conditioning",
+        "icon": null
+      },
+      {
+        "id": "fded4b57-10a9-4b75-8bb2-bd3e18404b6c",
+        "label": "Captain Seats",
+        "icon": null
+      },
+      {
+        "id": "9b0c00ee-97e4-4ff7-88e5-a80a7e935d64",
+        "label": "High Ground Clearance",
+        "icon": null
+      },
+      {
+        "id": "49bae4fb-4101-4483-b2b1-4e5a144b5110",
+        "label": "GPS Tracking",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "7b0fac3c-e50d-4f14-b53e-5b408f35f0db",
+    "slug": "innova-crysta",
+    "name": "Innova Crysta",
+    "categoryId": "651c510b-d9ab-4796-9371-bae652d139a2",
+    "capacity": 7,
+    "luggageCapacity": 5,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 2400,
+    "pricePerKm": 20,
+    "driverAllowance": 450,
+    "nightCharge": 400,
+    "fuelType": "Diesel",
+    "description": "Premium 7-seater with leather seats and extra refinement — preferred by corporate and VIP guests.",
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "7aae37ad-6041-4083-99a8-25f4dcf8ea07",
+        "url": "https://picsum.photos/seed/innova-crysta-0/1200/800",
+        "alt": "Innova Crysta — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "ce2612f5-2441-4cd6-adb3-694d6d03d494",
+        "url": "https://picsum.photos/seed/innova-crysta-1/1200/800",
+        "alt": "Innova Crysta — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "2490fc05-6656-4a6b-b296-76410ade1acf",
+        "url": "https://picsum.photos/seed/innova-crysta-2/1200/800",
+        "alt": "Innova Crysta — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "76c69f91-389c-477e-81b6-1e494f762e17",
+        "label": "Leather Seats",
+        "icon": null
+      },
+      {
+        "id": "4b9751df-c083-4c2e-b941-7d74854a21c3",
+        "label": "Rear AC Vents",
+        "icon": null
+      },
+      {
+        "id": "710570b2-e075-435f-ba18-b1629ab80e9d",
+        "label": "Premium Sound System",
+        "icon": null
+      },
+      {
+        "id": "5522a15a-9146-4cc7-b58c-a49a4e1faa7d",
+        "label": "Reclining Seats",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "335f49e9-d5e7-48a6-95e6-680c779e95a1",
+    "slug": "tempo-traveller-12",
+    "name": "Tempo Traveller (12 Seater)",
+    "categoryId": "bdc17e33-41c8-43d6-a1f4-9582fb1a4799",
+    "capacity": 12,
+    "luggageCapacity": 10,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 3200,
+    "pricePerKm": 24,
+    "driverAllowance": 500,
+    "nightCharge": 450,
+    "fuelType": "Diesel",
+    "description": "Ideal for group pilgrimage tours and family reunions across Kashi, Sarnath and Vindhyachal.",
+    "isActive": true,
+    "isFeatured": false,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "ddf94df5-5adb-4492-b556-d3034055dabe",
+        "url": "https://picsum.photos/seed/tempo-traveller-12-0/1200/800",
+        "alt": "Tempo Traveller (12 Seater) — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "6aeacaad-f025-48a1-a61b-c849b65b37d5",
+        "url": "https://picsum.photos/seed/tempo-traveller-12-1/1200/800",
+        "alt": "Tempo Traveller (12 Seater) — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "9408ccc6-5061-40b4-a9a0-57c373fcdd35",
+        "url": "https://picsum.photos/seed/tempo-traveller-12-2/1200/800",
+        "alt": "Tempo Traveller (12 Seater) — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "bceda802-5602-4265-bdf6-9265f5df070b",
+        "label": "Push-back Seats",
+        "icon": null
+      },
+      {
+        "id": "253bb7ff-ec82-47d2-8882-90862ef09373",
+        "label": "Air Conditioning",
+        "icon": null
+      },
+      {
+        "id": "2bd36d04-4355-40fe-b215-55602c8f0ed8",
+        "label": "Reading Lights",
+        "icon": null
+      },
+      {
+        "id": "ebd272bd-de86-46d4-9ddc-194688411572",
+        "label": "Luggage Carrier",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "84f6df61-4362-44f4-a114-63afdd70fa59",
+    "slug": "mercedes-e-class",
+    "name": "Mercedes-Benz E-Class",
+    "categoryId": "724cdafd-0dc2-496d-b8fd-bbf8d1229510",
+    "capacity": 3,
+    "luggageCapacity": 2,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 6000,
+    "pricePerKm": 45,
+    "driverAllowance": 800,
+    "nightCharge": 800,
+    "fuelType": "Diesel",
+    "description": "Chauffeur-driven luxury sedan for VIP airport transfers and executive corporate travel.",
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "8a619bab-9ccb-4c81-8c8f-55ad708d6a6b",
+        "url": "https://picsum.photos/seed/mercedes-e-class-0/1200/800",
+        "alt": "Mercedes-Benz E-Class — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "c44be84c-dc2e-4865-bba6-08c491a5e1b5",
+        "url": "https://picsum.photos/seed/mercedes-e-class-1/1200/800",
+        "alt": "Mercedes-Benz E-Class — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "8d937a30-cc40-4636-b9c0-e9efef943377",
+        "url": "https://picsum.photos/seed/mercedes-e-class-2/1200/800",
+        "alt": "Mercedes-Benz E-Class — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "9a19e2a2-11e8-4726-82d5-7732a0963daa",
+        "label": "Chauffeur in Uniform",
+        "icon": null
+      },
+      {
+        "id": "cfc16c6d-a658-4a49-a330-1b5dfa89db37",
+        "label": "Premium Leather Interior",
+        "icon": null
+      },
+      {
+        "id": "687d8869-bd90-422f-9070-6f973496510e",
+        "label": "Complimentary Water",
+        "icon": null
+      },
+      {
+        "id": "c62967bd-624b-4716-997f-b69b823e5b42",
+        "label": "Wi-Fi Onboard",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "4a58516a-366a-49eb-9967-4c41635d60d8",
+    "slug": "toyota-fortuner",
+    "name": "Toyota Fortuner",
+    "categoryId": "7702910c-952f-4990-a379-58bedbeb9a81",
+    "capacity": 6,
+    "luggageCapacity": 4,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 5500,
+    "pricePerKm": 40,
+    "driverAllowance": 700,
+    "nightCharge": 700,
+    "fuelType": "Diesel",
+    "description": "Commanding presence and comfort — for VIP darshan visits and premium family travel.",
+    "isActive": true,
+    "isFeatured": false,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "89582cb9-f39c-4415-b139-8cd632dc90a2",
+        "url": "https://picsum.photos/seed/toyota-fortuner-0/1200/800",
+        "alt": "Toyota Fortuner — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "9c697769-c8a1-4281-b652-110bffb895ce",
+        "url": "https://picsum.photos/seed/toyota-fortuner-1/1200/800",
+        "alt": "Toyota Fortuner — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "2545c3a7-3a82-4121-9a75-50dab405e35d",
+        "url": "https://picsum.photos/seed/toyota-fortuner-2/1200/800",
+        "alt": "Toyota Fortuner — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "983980f1-e26a-4a0b-8733-d4a8d9c096fd",
+        "label": "4x4 Capability",
+        "icon": null
+      },
+      {
+        "id": "ad45ef85-3cff-4478-b13a-ece61eb95bea",
+        "label": "Premium Interior",
+        "icon": null
+      },
+      {
+        "id": "1e1c7355-68b6-42e7-986b-6b4489bee311",
+        "label": "Sunroof",
+        "icon": null
+      },
+      {
+        "id": "f84678b3-3651-4d01-9d5c-254e9632d710",
+        "label": "Advanced Safety Suite",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "d4785e37-4027-4d2a-8b76-8df9cb1b7c90",
+    "slug": "coach-bus-45",
+    "name": "Luxury Coach (45 Seater)",
+    "categoryId": "5a69c7dd-60eb-419a-926c-ce95e784f203",
+    "capacity": 45,
+    "luggageCapacity": 30,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 9000,
+    "pricePerKm": 60,
+    "driverAllowance": 1000,
+    "nightCharge": 1000,
+    "fuelType": "Diesel",
+    "description": "Full-size luxury coach for large pilgrimage groups, corporate offsites and wedding parties.",
+    "isActive": true,
+    "isFeatured": false,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "f95c34ab-db3c-4986-8d64-b427998c23ce",
+        "url": "https://picsum.photos/seed/coach-bus-45-0/1200/800",
+        "alt": "Luxury Coach (45 Seater) — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "8289966b-466f-45de-a769-fab452bd9a09",
+        "url": "https://picsum.photos/seed/coach-bus-45-1/1200/800",
+        "alt": "Luxury Coach (45 Seater) — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "f9efbd64-3c19-4aab-9bd2-955dc3305689",
+        "url": "https://picsum.photos/seed/coach-bus-45-2/1200/800",
+        "alt": "Luxury Coach (45 Seater) — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "53027b09-fede-4e85-bc8a-aaa20947435e",
+        "label": "Reclining Seats",
+        "icon": null
+      },
+      {
+        "id": "23875d7d-a5e2-41dc-af24-99aac5b82c1e",
+        "label": "Onboard Restroom",
+        "icon": null
+      },
+      {
+        "id": "19322e74-0b3f-433a-8d8f-d134cd1a5942",
+        "label": "PA System",
+        "icon": null
+      },
+      {
+        "id": "271e7e5d-6c91-4024-9c4a-691d89f8326a",
+        "label": "Entertainment Screen",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  },
+  {
+    "id": "b5ac5426-8e10-4ed4-84a6-3de692fa7b3a",
+    "slug": "tata-nexon-ev",
+    "name": "Tata Nexon EV",
+    "categoryId": "d3f484c8-2b78-478a-a254-fdfe2977cc73",
+    "capacity": 4,
+    "luggageCapacity": 2,
+    "acType": "AC",
+    "transmission": "Manual",
+    "basePrice": 1200,
+    "pricePerKm": 10,
+    "driverAllowance": 300,
+    "nightCharge": 250,
+    "fuelType": "Diesel",
+    "description": "Zero-emission city rides — a quiet, modern option for Varanasi sightseeing.",
+    "isActive": true,
+    "isFeatured": true,
+    "createdAt": "2026-08-01T11:42:32.389Z",
+    "updatedAt": "2026-08-01T11:42:32.389Z",
+    "images": [
+      {
+        "id": "70656770-b8b9-47cb-a428-cada73249d0b",
+        "url": "https://picsum.photos/seed/tata-nexon-ev-0/1200/800",
+        "alt": "Tata Nexon EV — TIC Varanasi",
+        "sortOrder": 0,
+        "isPrimary": true
+      },
+      {
+        "id": "842cc0fd-48cf-4f8c-8175-0d8b5329941e",
+        "url": "https://picsum.photos/seed/tata-nexon-ev-1/1200/800",
+        "alt": "Tata Nexon EV — TIC Varanasi",
+        "sortOrder": 1,
+        "isPrimary": false
+      },
+      {
+        "id": "c4509e5d-e471-44d7-891a-ff94a182bce8",
+        "url": "https://picsum.photos/seed/tata-nexon-ev-2/1200/800",
+        "alt": "Tata Nexon EV — TIC Varanasi",
+        "sortOrder": 2,
+        "isPrimary": false
+      }
+    ],
+    "features": [
+      {
+        "id": "2e2febe7-839c-41ec-aea0-840fa8daee65",
+        "label": "Zero Emission",
+        "icon": null
+      },
+      {
+        "id": "be0cbf4e-c6ed-42c9-933f-894311179173",
+        "label": "Air Conditioning",
+        "icon": null
+      },
+      {
+        "id": "906859ee-5ae6-4884-89bf-4f7348ff21b0",
+        "label": "Touchscreen Infotainment",
+        "icon": null
+      },
+      {
+        "id": "523ba299-369e-406e-8eeb-52b9c7727d60",
+        "label": "Fast Charging Support",
+        "icon": null
+      }
+    ],
+    "pricingRules": []
+  }
+]

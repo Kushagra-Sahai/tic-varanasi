@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
-import { db } from "@/lib/db";
+import { listVehicles } from "@/server/services/vehicleService";
+import { listPackages } from "@/server/services/packageService";
+import { listDestinations } from "@/server/services/destinationService";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ticvaranasi.com";
 
@@ -19,9 +21,9 @@ const STATIC_ROUTES = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [vehicles, packages, destinations] = await Promise.all([
-    db.vehicle.findMany({ where: { isActive: true }, select: { slug: true, updatedAt: true } }),
-    db.package.findMany({ where: { isActive: true }, select: { slug: true, updatedAt: true } }),
-    db.destination.findMany({ where: { isActive: true }, select: { slug: true } }),
+    listVehicles(),
+    listPackages(),
+    listDestinations(),
   ]);
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((path) => ({

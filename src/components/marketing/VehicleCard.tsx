@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Users, Briefcase } from "lucide-react";
-import type { Decimal } from "@prisma/client/runtime/library";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -10,8 +9,8 @@ export type VehicleCardData = {
   name: string;
   capacity: number;
   luggageCapacity: number;
-  basePrice: number | string | Decimal;
-  pricePerKm: number | string | Decimal;
+  basePrice: number;
+  pricePerKm: number;
   isFeatured: boolean;
   category: { name: string };
   images: { url: string; alt: string }[];

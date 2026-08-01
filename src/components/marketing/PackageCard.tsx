@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Clock } from "lucide-react";
-import type { Decimal } from "@prisma/client/runtime/library";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -11,8 +10,8 @@ export type PackageCardData = {
   summary: string;
   durationDays: number;
   durationNights: number;
-  price: number | string | Decimal;
-  discountPrice: number | string | Decimal | null;
+  price: number;
+  discountPrice: number | null;
   isFeatured: boolean;
   images: { url: string; alt: string }[];
 };

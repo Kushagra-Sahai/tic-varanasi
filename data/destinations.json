@@ -1,0 +1,46 @@
+[
+  {
+    "id": "8d8c65fb-3105-4ba1-b832-e6186eb3f899",
+    "slug": "varanasi",
+    "name": "Varanasi",
+    "summary": "The eternal city on the banks of the Ganga.",
+    "history": "One of the oldest continuously inhabited cities in the world, sacred to Hindus, Jains and Buddhists alike.",
+    "bestSeason": "October to March",
+    "weatherInfo": null,
+    "mapEmbedUrl": null,
+    "isActive": true
+  },
+  {
+    "id": "79b3c22e-48f8-433f-8b47-bfb3d456a63d",
+    "slug": "sarnath",
+    "name": "Sarnath",
+    "summary": "Where Buddha delivered his first sermon.",
+    "history": "A major Buddhist pilgrimage site 10km from Varanasi, home to the Dhamek Stupa.",
+    "bestSeason": "October to March",
+    "weatherInfo": null,
+    "mapEmbedUrl": null,
+    "isActive": true
+  },
+  {
+    "id": "9b869e07-6b29-449a-ba00-9c10c02aef5d",
+    "slug": "ayodhya",
+    "name": "Ayodhya",
+    "summary": "Birthplace of Lord Rama and home to the Ram Mandir.",
+    "history": "One of the seven most sacred cities in Hinduism, on the banks of the Sarayu river.",
+    "bestSeason": "October to March",
+    "weatherInfo": null,
+    "mapEmbedUrl": null,
+    "isActive": true
+  },
+  {
+    "id": "fe2b459d-9f5f-4c05-b18c-49d29bf24714",
+    "slug": "prayagraj",
+    "name": "Prayagraj",
+    "summary": "Sangam of the Ganga, Yamuna and mythical Saraswati.",
+    "history": "Site of the Kumbh Mela, one of the largest religious gatherings on Earth.",
+    "bestSeason": "October to March",
+    "weatherInfo": null,
+    "mapEmbedUrl": null,
+    "isActive": true
+  }
+]
